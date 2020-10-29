@@ -1,0 +1,339 @@
+---
+title: "Mini Project 1: "
+author: "Yuriko Schumacher"
+date: "10/18/2020"
+output: html_document
+---
+
+# What is the most preferred Halloween Candy?
+
+The year of 2020 is passing by so fast, but before we know it, Halloween is right around the corner!
+Trick or treating is such an interesting American culture, and I found this interesting data set put together by **FiveThirtyEight**, for the project "The Ultimate Halloween Candy Power Ranking."
+I am analyzing this data set because I'd like to know about popular American candies, an interestingly significant part of the American culture.
+
+## Introduction of data
+
+This deta set was put together in 2017 to determine what Halloween candy is preferred the most. According to the article, FiveThirtyEight conducted an experimental survey where people are presented by two Halloween candies (out of 85 different kinds) to choose the one they prefer.
+FiveThirtyEight collected the voting data by 8,371 different IP addresses on about 269,000 combinations.
+
+The data set shows the winning percentage for each candy, as well as its attributes.
+
+### Load the data
+
+Now, I'm going to load the data from github and replace the erronious characters.
+
+```{r setup, include=FALSE}
+# Load the library
+library(tidyverse)
+```
+
+```{r load the data}
+# Load the data from github
+candy.data.row <- read_csv(url("https://raw.githubusercontent.com/fivethirtyeight/data/master/candy-power-ranking/candy-data.csv"))
+
+# Save the data as csv for submission
+write.csv(candy.data.row, "data/candy-data.csv")
+
+# Replace the erronious characters
+candy.data <- candy.data.row %>% 
+  mutate(competitorname = str_replace(competitorname, "Õ", "'"))
+
+```
+
+### Rows and columns
+
+In the data set, each row corresponds to a single candy. For each candy, the data includes the following variables. For binary variables, 1 means "Yes", and 0 means "No".
+
+- competitorname: name of the candy
+- chocolate: whether the candy contains chocolate
+- fruity: whether the candy is fruit flavored
+- peanutalmondy: whether the candy contain peanuts, peanut butter or almonds
+- nougat: whether the candy contains nougat
+- crispedricewafer: whether the candy contains crisped rice, wafers, or a cookie component
+- hard: whether the candy is a hard candy
+- bar: whether the candy is a candy bar
+- pluribus: whether the candy is one of many candies in a bag or box
+- sugarpercent: the percentile of sugar the candy falls under within the data set
+- pricepercent: the unit price percentile compared to the rest of the set
+- winpercent: the overall win percentage according to 269,000 matchups
+
+## Analyzing the data
+In this section, I am going to analyze the data and try to answer the following questions.
+
+- What kind of candy is the most/least preferred? What does the ranking of popular candies look like?
+- Is there a tendency where a particular attribute affect the win percent? What attributes are more/less popular?
+
+
+### The most preferred candy
+First, the most preferred candy is shown below.
+
+```{r most preferred candy ranking}
+# Get the ranking of popular candies
+candy.data %>% 
+  select(competitorname, winpercent) %>% 
+  arrange(desc(winpercent))
+```
+This shows that "Reese's Peanut Butter cup" is the most popular with about 84% of the winning rate. The least preferred candy is "Nik L Nip", wax bottled mini-candy drinks. (I have never heard of it!)
+And also it's worth mentioning that "Boston Baked Beans" is the second least popular.
+
+### The most preferred candy type
+
+Next, I'll analyze the data to see if there's a tendency where candy's particular attributes affect the winpercent. To do this, for each candy attribute, I'm going to compare the difference between average winning rates with and without that attribute.
+
+```{r}
+# Define a function to get avarage difference between value = 1 and value = 0
+get.avg <- function (col) {
+  col = sym(col)
+  candy.data %>% 
+    group_by(!!col) %>% 
+    summarize(avg.win = mean(winpercent))
+}
+
+# Get the difference in winning rate for each attribute
+no = c(
+  get.avg("chocolate")[[1,2]],
+  get.avg("fruity")[[1,2]],
+  get.avg("caramel")[[1,2]],
+  get.avg("peanutyalmondy")[[1,2]],
+  get.avg("nougat")[[1,2]],
+  get.avg("crispedricewafer")[[1,2]],
+  get.avg("hard")[[1,2]],
+  get.avg("bar")[[1,2]],
+  get.avg("pluribus")[[1,2]]
+)
+
+yes = c(
+  get.avg("chocolate")[[2,2]],
+  get.avg("fruity")[[2,2]],
+  get.avg("caramel")[[2,2]],
+  get.avg("peanutyalmondy")[[2,2]],
+  get.avg("nougat")[[2,2]],
+  get.avg("crispedricewafer")[[2,2]],
+  get.avg("hard")[[2,2]],
+  get.avg("bar")[[2,2]],
+  get.avg("pluribus")[[2,2]]
+)
+
+avg.win <- data.frame(
+  ATTRIBUTE = c("Chocolate", "Fruity", "Caramel", "Peanut", "Nougat", "Crispy", "Hard candy", "Candy bar",   "Bag"),
+  NO = no,
+  YES = yes
+) %>%
+  mutate(difference = YES - NO) %>% 
+  arrange(desc(difference))
+
+avg.win
+
+```
+
+This shows that there is the biggest difference between the average winning rate for chocolate candies and non-chocolate candies. It is safe to think that when chocolate is added to a candy, it is likely to increase in winning rate.
+
+On the other hand, fruity flavored candies and hard candies are among the least popular on average. If you are thinking to invent a new candy, you might want to avoid hard or fruity flavored candies.
+
+## Visualizing the data
+In this section, I'm going to create a few visualizations partly using the analysis above.
+
+I'm going to answer the following questions:
+- What is the winning rate looks like?
+- Is there any relationships between the percentile of sugar, the unit price, and the popularity?
+- How many candies are hard candies and how many are candy bars? Which ones are more popular overall?
+
+
+### The winning rate ranking
+First, I'm going to visualize the ranking of winning rate. Since the analysis above shows that the attribute "chocolate" contribute the most to the winning rate on average, I'm going to visualize how many candies have the "chocolate" attribute, and where they are located in the ranking.
+
+```{r ranking & chocolate}
+candy.data %>% 
+  mutate(chocolate = str_replace(chocolate, "0", "No"),
+         chocolate = str_replace(chocolate, "1", "Yes")) %>% 
+  ggplot(mapping = aes(x = reorder(competitorname, desc(winpercent)), y = winpercent)) +
+  geom_col(aes(fill = factor(chocolate)), width = 0.5) +
+  scale_fill_manual(values = c("lightgray", "#FC4C02")) +
+  scale_y_continuous(breaks = c(0, 25, 50, 75),
+                     label = c("0%", "25%", "50%", "75%")) +
+  labs(title = "Candy's popularity and chocolate",
+      y = "Win rate", fill = "Chocolate?") +
+  annotate("text", x = 14, y = 86, label = "Reese's Peanut Butter cup (84.2%)", size = 2.5) +
+  annotate("text", x = 20, y = 70, label = "Starburst (67.0%)", size = 2.5) +
+  annotate("text", x = 78, y = 37, label = "Nik L Nip (22.4%)", size = 2.5) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_blank(),
+    axis.title.x = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position = c(0.95, 0.83),
+    legend.justification = c("right", "top")
+  ) 
+
+ggsave("rank_chocolate.png", width = 7, height = 5)
+```
+
+The visualization above shows that higher-ranked candies tend to contain chocolate.
+
+The visualization below shows the winning rate ranking and whether each candy contains fruity flavors.
+
+```{r ranking & fruity flavors}
+candy.data %>% 
+  mutate(fruity = str_replace(fruity, "0", "No"),
+         fruity = str_replace(fruity, "1", "Yes")) %>% 
+  ggplot(mapping = aes(x = reorder(competitorname, desc(winpercent)), y = winpercent)) +
+  geom_col(aes(fill = factor(fruity)), width = 0.5) +
+  scale_fill_manual(values = c("lightgray", "#00B098")) +
+  scale_y_continuous(breaks = c(0, 25, 50, 75),
+                     label = c("0%", "25%", "50%", "75%")) +
+  labs(title = "Candy's popularity and fruity flavors",
+       y = "Win rate", fill = "Fruity?") +
+  annotate("text", x = 20, y = 70, label = "Starburst (67.0%)", size = 2.5) +
+  annotate("text", x = 28, y = 65, label = "Skittles original (63.1%)", size = 2.5) +
+  annotate("text", x = 79, y = 37, label = "Nik L Nip (22.4%)", size = 2.5) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_blank(),
+    axis.title.x = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position = c(0.95, 0.83),
+    legend.justification = c("right", "top")
+  ) 
+
+ggsave("rank_fruity.png", width = 7, height = 5)
+                
+```
+
+This shows that lower-ranked candies are more likely to contain fruity flavors than higher-ranked ones.
+
+### Average winning rate with or without each attribute
+In the analysis above, we learned that candies that contain chocolate have the most difference between average winning rates from candies without chocolate.
+Here, I'm going to create a cleveland dot plot to visualize the difference between average winning rate for candies with or without each attribute.
+
+```{r}
+avg.win %>%  
+  ggplot(aes(x = reorder(ATTRIBUTE, difference))) +
+  geom_segment(aes(xend = ATTRIBUTE, y = NO, yend = YES), color = "lightgray", size = 1.2) +
+  geom_point(aes(y = NO, color = "No"), size = 2.7) +
+  geom_point(aes(y = YES, color = "Yes"), size = 2.7) +
+  scale_color_manual(name = "Condition", labels = c("Do not include", "Include"), values = c("#FC4C02", "#00B098")) +
+scale_y_continuous(breaks = c(40, 50, 60), 
+                   label = c("40%", "50%", "60%")) +
+  theme_minimal() +
+  labs(title = "Average win rate for candies with or without each attribute",
+       x = "Attribute", y = "Average win rate") +
+  theme(
+    panel.grid.minor.x = element_blank(),
+    legend.position = c(0.95, 0.35),
+    legend.justification = c("right", "top"),
+    legend.background = element_rect(color = "white", fill = "white")
+  ) +
+  coord_flip()
+
+ggsave("avg_win_rate.png", width = 7, height = 5)
+
+```
+
+The visualization above shows that chocolate does have the biggest difference between average winning rates, but crispy candies have even higher winning rate on average. It's reasonable to say that if a candy does not contain chocolate, its winning rate would drop, whereas if a candy does contain crispy attribute, on average, its winning rate would rise!
+Therefore, chocolate is almost essential for popular candies, while crispy snacks adds more popularity.
+
+
+### Relationships between sugar, price, and win percentiles
+
+Next, I'm going to see if there's a correlation between the percentiles of sugar, price, and win percentage.
+
+```{r correlation}
+candy.data %>%
+  mutate(pricepercent = pricepercent * 100) %>% 
+  ggplot(mapping = aes(x = winpercent, y = sugarpercent)) +
+  geom_point(aes(color = pricepercent), size = 5, shape = 18, alpha = 0.8) +
+  scale_color_gradient(low = "lightgray", high = "#FC4C02") +
+  scale_x_continuous(breaks = c(25, 50, 75),
+                     label = c("25%", "50%", "75%")) +
+  scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1),
+                     label = c("0%", "25%", "50%", "75%", "100%")) +
+  labs(title = "Relationships between a candy's popularity, sugar, and price",
+x = "Win rate", y = "Sugar rate", color = "Price rate (%)") +
+  theme_minimal() +
+  theme(panel.grid.minor = element_blank())
+
+ggsave("sugar_price_win.png", width = 7, height = 5)
+
+```
+
+From this visualization, it doesn't look like there's a correlation between sugar, price, and win percentages. 
+
+### Candy bar or hard candy?
+Finally, all the candies can be grouped either 1) hard candy, 2) candy bar, or 3) neither of them.
+In this section, I'm going to creat an alluvial diagram and visualize if there's a correlation between the candy's type and win percentage.
+Here, I used the R Graph Gallery and CRAN - R Project as a reference.
+
+First, I'm going to obtain a data set in an alluvial form. I'm going to label the winning rate into four groups devided by each quantile.
+
+```{r}
+# Create a column that shows candy's type (bar, hard, or neither)
+reduced <- candy.data %>% 
+  select(hard, bar, winpercent) %>% 
+  mutate(type = hard - bar) %>%  
+  mutate(type = str_replace(type, "-1", "Bar"),
+         type = str_replace(type, "0", "Neither"),
+         type = str_replace(type, "1", "Hard")) %>% 
+  select(winpercent, type)
+
+# Devide the winpercent in each quantile
+low <- quantile(reduced$winpercent, 0.25)
+median <- quantile(reduced$winpercent, 0.5)
+high <- quantile(reduced$winpercent, 0.75)
+
+# Is there a way to iptimize this process?
+rank1 <- reduced %>% 
+  filter(winpercent >= high) %>% 
+  mutate(rank = "Rank 1")
+
+rank2 <- reduced %>% 
+  filter(winpercent < high, winpercent >= median) %>% 
+  mutate(rank = "Rank 2")
+
+rank3 <- reduced %>% 
+  filter(winpercent < median, winpercent >= low) %>% 
+  mutate(rank = "Rank 3")
+
+rank4 <- reduced %>% 
+  filter(winpercent < low) %>% 
+  mutate(rank = "Rank 4")
+
+reduced2 <- rbind(rank1, rank2, rank3, rank4) %>% 
+  select(-winpercent)
+
+```
+
+Let's visualize!
+
+```{r}
+# Install & load the library
+install.packages("ggalluvial")
+library(ggalluvial)
+
+# Visualize the data
+reduced2 %>% 
+  ggplot(mapping = aes(axis1 = type,
+                       axis2 = rank)) +
+  geom_alluvium(aes(fill = rank)) +
+  geom_stratum(width = 0.2, fill = "white", color = "gray") +
+  geom_text(stat = "stratum", 
+            aes(label = after_stat(stratum)),
+            color = "#545454") +
+  scale_x_discrete(limits = c("Candy type", "Popularity"),
+                   expand = c(0.05, 0.05)) +
+  scale_fill_manual(values = c("#FC4C02", "#00B098", "#B0AE00", "#7F0FFC")) +
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.text.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank()
+        ) +
+  labs(title = "Candy's popularity rank and its type")
+
+ggsave("win_type.png", width = 7, height = 5)
+
+```
+
+This visualization shows that bar candies tend to be more preferred; about the half of bar candies are ranked on the top 25%. Conversely, hard candies are less popular; most of them are ranked below 50%.
+
