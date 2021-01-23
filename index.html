@@ -1,477 +1,360 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Mini Project 1</title>
-        <link rel="stylesheet" href="style.css">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
-    </head>
-    <body>
-        <div id="header">
-            <div id="header--content">
-                <h1>
-                    What is the most Popular Halloween Candy?
-                </h1>
-                <p>
-                    The year of 2020 is passing by so fast, and before we know it, it'll be Halloween!
-                </p>
-                <p>
-                    I found this data set put together by <b>FiveThirtyEight</b>, for the project <a href="https://fivethirtyeight.com/videos/the-ultimate-halloween-candy-power-ranking/" target="_blank">The Ultimate Halloween Candy Power Ranking</a>.
-                </p>
-                <p>
-                    I am analyzing this data set because trick or treating is such an interesting part of American culture, and I'd like to know more about popular American candies.
-                </p>
-                <p class="info"><b>
-                    ARTG 5330 Mini Project 1
-                    <br>October 2020
-                    <br>Yuriko Schumacher</b>
-                </p>
-                <div id="header--bottom"><a href="#main"><i class="fas fa-angle-down"></i></a></div>
-            </div>
-        </div>
-        <div id="main">
-            <div id="sidebar">
-                <ul>
-                    <li>
-                        <b><a href="#intro">Introducing the data</a></b>
-                    </li>
-                    <ul>
-                        <li>
-                            <a href="#load">Load the data</a>
-                        </li>
-                        <li>
-                            <a href="#rowscolumns">Rows and columns</a>
-                        </li>
-                    </ul>
-                    <li>
-                        <b><a href="#analysis">Analyzing the data</a></b>
-                    </li>
-                    <ul>
-                        <li>
-                            <a href="#rank-table">Preferred candy ranking</a>
-                        </li>
-                        <li>
-                            <a href="#type">Win rate comparison for candy type</a>
-                        </li>
-                    </ul>
-                    <li>
-                        <b><a href="#visualization">Visualizing the data</a></b>
-                        <ul>
-                            <li>
-                                <a href="#rank-viz">Win rate ranking</a>
-                            </li>
-                            <li>
-                                <a href="#avg-win-rate">Win rate comparison for candy type</a>
-                            </li>
-                            <li>
-                                <a href="#sugar-price-win">Sugar / price / win rate</a>
-                            </li>
-                            <li>
-                                <a href="#bar-or-hard">Candy bar or hard candy?</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <br><br><br><li>
-                        See the original data on <a href="https://github.com/fivethirtyeight/data/tree/master/candy-power-ranking" target="_blank">Github <i class="fab fa-github"></i></a>
-                    </li>
-                </ul>
-            </div>
-            <div id="body">
-                <div id="intro">
-                    <h2>
-                        Introducing the data
-                    </h2>
-                    <p>
-                        This deta set was put together in 2017 to determine which Halloween candy is most preferred. According to <a href="https://fivethirtyeight.com/videos/the-ultimate-halloween-candy-power-ranking/" target="_blank">the project's article</a>, <b>FiveThirtyEight</b> conducted an experimental survey where people are randomly presented two Halloween candies (out of 85 different kinds) and asked to choose the one they prefer.
-                    </p>
-                    <p>
-                        <b>FiveThirtyEight</b> collected the voting data from 8,371 different IP addresses on about 269,000 candy combinations.
-                    </p>
-                    <p>
-                        <a href="https://github.com/fivethirtyeight/data/tree/master/candy-power-ranking" target="_blank">The data set</a> shows the win rate (popularity) for each candy, as well as its attributes.
-                    </p>
-                    <div id="load">
-                        <h3>
-                            Load the data
-                        </h3>
-                        <p>
-                            Now, I'm going to load the data from github, replacing some erronious characters.
-                        </p>
-                        <pre>
-<span class="comment"># Load the data from github</span>
-candy.data.row <- read_csv(
-    url("https://raw.githubusercontent.com/
-    fivethirtyeight/data/master/candy-power-ranking/
-    candy-data.csv"))
+	<head>
+		<title>Mini Project 1</title>
+		<link rel="stylesheet" href="style.css" />
+		<link
+			rel="stylesheet"
+			href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"
+		/>
+	</head>
+	<body>
+		<div id="header">
+			<div id="header--content">
+				<h1>What is the most Popular Halloween Candy?</h1>
+				<p>
+					The year of 2020 is passing by so fast, and before we know
+					it, it'll be Halloween!
+				</p>
+				<p>
+					I found this data set put together by
+					<b>FiveThirtyEight</b>, for the project
+					<a
+						href="https://fivethirtyeight.com/videos/the-ultimate-halloween-candy-power-ranking/"
+						target="_blank"
+						>The Ultimate Halloween Candy Power Ranking</a
+					>.
+				</p>
+				<p>
+					I am analyzing this data set because trick or treating is
+					such an interesting part of American culture, and I'd like
+					to know more about popular American candies.
+				</p>
+				<p class="info">
+					<b>
+						October 2020 (updated January 2021)<br />by Yuriko
+						Schumacher</b
+					>
+				</p>
+				<div id="header--bottom">
+					<a href="#main"><i class="fas fa-angle-down"></i></a>
+				</div>
+			</div>
+		</div>
+		<div id="main">
+			<section class="body">
+				<h2>Introducing the data</h2>
+				<p>
+					This deta set was put together in 2017 to determine which
+					Halloween candy is most preferred. According to
+					<a
+						href="https://fivethirtyeight.com/videos/the-ultimate-halloween-candy-power-ranking/"
+						target="_blank"
+						>the project's article</a
+					>, <b>FiveThirtyEight</b> conducted an experimental survey
+					where people are randomly presented two Halloween candies
+					(out of 85 different kinds) and asked to choose the one they
+					prefer.
+				</p>
+				<p>
+					<b>FiveThirtyEight</b> collected the voting data from 8,371
+					different IP addresses on about 269,000 candy combinations.
+				</p>
+				<p>
+					<a
+						href="https://github.com/fivethirtyeight/data/tree/master/candy-power-ranking"
+						target="_blank"
+						>The data set</a
+					>
+					shows the win rate (popularity) for each candy, as well as
+					its attributes.
+				</p>
+				<div id="rowscolumns">
+					<h3>Rows and columns</h3>
+					<p>
+						In the data set, each row corresponds to a single candy.
+						For each candy, the data includes the following
+						variables. For binary variables, 1 means "Yes", and 0
+						means "No".
+					</p>
+					<ul>
+						<li><b>competitorname</b>: name of the candy</li>
+						<li>
+							<b>chocolate</b>: whether the candy contains
+							chocolate
+						</li>
+						<li>
+							<b>fruity</b>: whether the candy is fruit flavored
+						</li>
+						<li>
+							<b>peanutalmondy</b>: whether the candy contains
+							peanuts, peanut butter, or almonds
+						</li>
+						<li>
+							<b>nougat</b>: whether the candy contains nougat
+						</li>
+						<li>
+							<b>crispedricewafer</b>: whether the candy contains
+							crisped rice, wafers, or a cookie component
+						</li>
+						<li><b>hard</b>: whether the candy is a hard candy</li>
+						<li><b>bar</b>: whether the candy is a candy bar</li>
+						<li>
+							<b>pluribus</b>: whether the candy is one of many
+							candies in a bag or box
+						</li>
+						<li>
+							<b>sugarpercent</b>: the percentile of sugar the
+							candy falls under within the data set
+						</li>
+						<li>
+							<b>pricepercent</b>: the unit price percentile
+							compared to the rest of the set
+						</li>
+						<li>
+							<b>winpercent</b>: the overall win percentage
+							according to 269,000 matchups
+						</li>
+					</ul>
+				</div>
+			</section>
 
-<span class="comment"># Replace the erronious characters</span>
-candy.data <- candy.data.row %>% 
-    mutate(competitorname = str_replace(competitorname, "Õ", "'"))</pre>
-                    </div>
-                    <div id="rowscolumns">
-                        <h3>
-                            Rows and columns
-                        </h3>
-                        <p>
-                            In the data set, each row corresponds to a single candy. For each candy, the data includes the following variables. For binary variables, 1 means "Yes", and 0 means "No".
-                        </p>
-                        <ul>
-                            <li>
-                                <b>competitorname</b>: name of the candy
-                            </li>
-                            <li>
-                                <b>chocolate</b>: whether the candy contains chocolate
-                            </li>
-                            <li>
-                                <b>fruity</b>: whether the candy is fruit flavored
-                            </li>
-                            <li>
-                                <b>peanutalmondy</b>: whether the candy contains peanuts, peanut butter, or almonds
-                            </li>
-                            <li>
-                                <b>nougat</b>: whether the candy contains nougat
-                            </li>
-                            <li>
-                                <b>crispedricewafer</b>: whether the candy contains crisped rice, wafers, or a cookie component
-                            </li>
-                            <li>
-                                <b>hard</b>: whether the candy is a hard candy
-                            </li>
-                            <li>
-                                <b>bar</b>: whether the candy is a candy bar
-                            </li>
-                            <li>
-                                <b>pluribus</b>: whether the candy is one of many candies in a bag or box
-                            </li>
-                            <li>
-                                <b>sugarpercent</b>: the percentile of sugar the candy falls under within the data set
-                            </li>
-                            <li>
-                                <b>pricepercent</b>: the unit price percentile compared to the rest of the set
-                            </li>
-                            <li>
-                                <b>winpercent</b>: the overall win percentage according to 269,000 matchups
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div id="analysis">
-                    <h2>
-                        Analyzing the data
-                    </h2>
-                    <p>
-                        In this section, I am going to analyze the data and try to answer the following questions.
-                    </p>
-                    <ul>
-                        <li>
-                            What kind of candy is the most/least preferred? What does the ranking of popular candies look like?
-                        </li>
-                        <li>
-                            Is there a tendency for a particular attribute to affect win rate? What attributes are more/less popular?
-                        </li>
-                    </ul>
-                    <div id="rank-table">
-                        <h3>
-                            The most preferred candy
-                        </h3>
-                        <p>
-                            First, the most preferred candy is shown below.
-                        </p>
-                        <pre>
-<span class="comment"># Get the ranking of popular candies</span>
-candy.data %>% 
-    select(competitorname, winpercent) %>% 
-    arrange(desc(winpercent))</pre>
-                    </div>
-                    <img src="./image/table1.png" width = 680 alt="table of winpercent ranking (Top)">
-                    <p>
-                        The image above is a screenshot of a table that shows the top 10 most popular candies. <a href="https://www.hersheys.com/reeses/en_us/products/reeses-peanut-butter-cups.html" target="_blank">Reese's Peanut Butter cup</a> is the most popular with about an 84% win rate. We can see a lot of people like the brand <a href="https://www.hersheys.com/reeses/en_us/home.html" target="_blank">Reese's</a>.
-                    </p>
-                    <p>
-                        The screenshot below shows the last page of the table, which contains data about candies with the lowest win rate. The least preferred candy is <a href="https://www.candystore.com/concord-nik-l-nip-wax-bottles-candy/" target="_blank">Nik L Nip</a>, wax bottled mini-candy drinks (I have never heard of it!). It's also worth mentioning that <a href="https://www.ferraracandyshopusa.com/brands/boston-baked-beans.html" target="_blank">Boston Baked Beans</a> is the second least popular.
-                    </p>
-                    <img src="./image/table1-2.png" width = 680 alt="table of winpercent ranking (Bottom)">
-                    <div id="type">
-                        <h3>
-                            Win rate comparison for candy type
-                        </h3>
-                        <p>
-                            Next, I'll analyze the data to see if there's a tendency where a candy's particular attributes affect its popularity. To do this, for each candy attribute, I'm going to compare the difference between average win rates for candies with and without that attribute.
-                        </p>
-                        <pre>
-<span class="comment"># Define a function to get the average win rate for each attribute</span>
-get.avg <- function (col) {
-    col = sym(col)
-    candy.data %>% 
-    group_by(!!col) %>% 
-    summarize(avg.win = mean(winpercent))
-  }
+			<section class="body">
+				<h2>Visualizing the data</h2>
+				<p>
+					In this section, I'm going to visualize the data to answer
+					the following questions:
+				</p>
 
-<span class="comment"># Get the average win rate for candies with or without each attribute</span>
-no = c(get.avg("chocolate")[[1,2]],
-       get.avg("fruity")[[1,2]],
-       get.avg("caramel")[[1,2]],
-       get.avg("peanutyalmondy")[[1,2]],
-       get.avg("nougat")[[1,2]],
-       get.avg("crispedricewafer")[[1,2]],
-       get.avg("hard")[[1,2]],
-       get.avg("bar")[[1,2]],
-       get.avg("pluribus")[[1,2]])
+				<ul>
+					<li>What is the candy's win rate?</li>
+					<li>
+						Is there any relationship between a candy's sugar
+						content, or unit price, and its popularity?
+					</li>
+					<li>
+						How many candies are hard candies and how many are candy
+						bars? Which type is more popular overall?
+					</li>
+				</ul>
+			</section>
 
-yes = c(get.avg("chocolate")[[2,2]],
-        get.avg("fruity")[[2,2]],
-        get.avg("caramel")[[2,2]],
-        get.avg("peanutyalmondy")[[2,2]],
-        get.avg("nougat")[[2,2]],
-        get.avg("crispedricewafer")[[2,2]],
-        get.avg("hard")[[2,2]],
-        get.avg("bar")[[2,2]],
-        get.avg("pluribus")[[2,2]])
+			<div id="rank-viz">
+				<section class="body">
+					<h3>1. The win rate ranking</h3>
+					<p>
+						First, I'm going to visualize the candies' win rates.
+						Since there are many attributes to candies, I'm going to
+						visualize how many candies have certain attributes, and
+						where they are located in the ranking.
+					</p>
+					<p>To do that, I'm going to create an ordered bar chart.</p>
+				</section>
+			</div>
+			<section id="scrolly__bar">
+				<figure id="rank-bar" class="sticky">
+					<button class="button" id="chocolate" disabled>
+						chocolate
+					</button>
+					<button class="button" id="fruity" disabled>fruity</button>
+					<button class="button" id="caramel" disabled>
+						caramel
+					</button>
+					<button class="button" id="crispedricewafer" disabled>
+						crispy
+					</button>
+					<button class="button" id="peanutyalmondy" disabled>
+						peanuty
+					</button>
+					<button class="button" id="nougat" disabled>nougat</button>
+				</figure>
+				<article>
+					<div class="step" data-index="0">
+						<p>
+							Each bar represents the candy's win rate. The bar in
+							the higher position has more popularity (higher win
+							rate).
+						</p>
+					</div>
+					<div
+						class="step"
+						data-index="1"
+						data-id="Reese's Peanut Butter cup"
+					>
+						<p>
+							The candy with the highest win rate is
+							<a
+								href="https://www.hersheys.com/reeses/en_us/products/reeses-peanut-butter-cups.html"
+								target="_blank"
+								>Reese's Peanut Butter cup</a
+							>
+							with the win rate of 84.18%.
+						</p>
+					</div>
+					<div class="step" data-index="2" data-id="Nik L Nip">
+						<p>
+							The least preferred candy is
+							<a
+								href="https://www.candystore.com/concord-nik-l-nip-wax-bottles-candy/"
+								target="_blank"
+								>Nik L Nip</a
+							>, wax bottled mini-candy drinks with the win rate
+							of 22.45%.
+						</p>
+					</div>
+					<div class="step" data-index="3" data-id="chocolate">
+						<p>
+							These are candies that contain
+							<span class="font-flavor font-chocolate"
+								>chocolate</span
+							>. From the visualization, we can say higher-ranked
+							candies tend to contain chocolate. (You can always
+							hover over bars to check out which candy that bar
+							represents!)
+						</p>
+					</div>
+					<div class="step" data-index="4" data-id="fruity">
+						<p>
+							These candies have
+							<span class="font-flavor font-fruity">fruity</span>
+							flavors. This shows that candies that contain fruity
+							flavors are fairly equally distributed, except for
+							the ones in the highest-ranked group.
+						</p>
+					</div>
+					<div class="step" data-index="5">
+						<p>
+							There are other candy attributes:
+							<span class="font-flavor font-caramel">caramel</span
+							>,
+							<span class="font-flavor font-crispy">crispy</span>,
+							<span class="font-flavor font-peanuty">peanuty</span
+							>, and
+							<span class="font-flavor font-nougat">nougat</span>.
+							You can click the buttons above the chart to show
+							the bars with the attribute. If you hover over the
+							bars, you can also see, in the tooltip, the candy's
+							attributes shown as circles of the corresponding
+							colors on the button.
+						</p>
+						<p>Explore more yourself!</p>
+					</div>
+				</article>
+			</section>
+			<section class="body">
+				<div id="sugar-price-win">
+					<h3>
+						2. Relationships between sugar, price, and win
+						percentiles
+					</h3>
+					<p>
+						Here, I'm making a scatter plot to see if there's a
+						correlation between a candy's sugar content, or unit
+						price, and its popularity.
+					</p>
+					<img
+						src="./image/sugar_price_win.png"
+						width="680"
+						alt="Scatter plot of sugar, price, win percentages"
+					/>
+				</div>
+				<p>
+					On the y-axis, "Sugar percentile" is the sugar percentage
+					the candy falls under within the data set. The color key
+					"Price percentile" shows the candy's unit price percentile
+					compared to the other candies in the data set.
+				</p>
+				<p>
+					From this visualization, it doesn't look like there's a
+					notable correlation between how much sugar each candy
+					contains and its popularity, or the candy's price and its
+					popularity.
+				</p>
+				<div id="bar-or-hard">
+					<h3>3. Candy bar or hard candy?</h3>
+					<p>
+						Finally, all the candies can be grouped as either 1)
+						hard candy, 2) candy bar, or 3) neither.
+					</p>
+					<p>
+						In this section, I'm going to create an alluvial diagram
+						and visualize the relationship between a candy's type
+						and win percentage. Here, I will use
+						<a
+							href="https://www.r-graph-gallery.com/sankey-diagram.html"
+							target="_blank"
+							>the R Graph Gallery</a
+						>
+						and
+						<a
+							href="https://cran.r-project.org/web/packages/ggalluvial/vignettes/ggalluvial.html"
+							target="_blank"
+							>CRAN - R Project</a
+						>
+						as a reference.
+					</p>
+					<p>
+						First, I'm going to manipulate the data into an alluvial
+						form. To do this, I divide the win rate into four groups
+						(quantiles).
+					</p>
+					<p>
+						From the top 25% in popularity, I'll label the data as
+						"Rank 1", followed by "Rank 2" (25% ~ 50%), "Rank 3"
+						(50% ~ 75%), and "Rank 4" (bottom 25%).
+					</p>
+					<img
+						src="./image/win_type.png"
+						width="680"
+						alt="Alluvial diagram of candy types and win rate"
+					/>
+					<p>
+						This visualization shows that candy bars tend to be more
+						preferred; about half of candy bars are ranked on the
+						top 25%. Conversely, hard candies are less popular; most
+						of them are ranked below 50%.
+					</p>
+					<p>
+						However, as shown in the visualization, more than half
+						the candies are labeled "Neither" as the candy type.
+						Those candies include:
+						<a
+							href="https://www.hersheys.com/reeses/en_us/products/reeses-peanut-butter-cups.html"
+							target="_blank"
+							>Reese's Peanut Butter cup</a
+						>,
+						<a
+							href="https://www.candystore.com/candy-corn-30lb/"
+							target="_blank"
+							>Candy Corn</a
+						>,
+						<a
+							href="https://www.mms.com/en-us/mms-peanut-butter-chocolate-sharing-size/p/mms-peanut-butter-chocolate"
+							target="_blank"
+							>Peanut butter M&M's</a
+						>,
+						<a
+							href="https://www.candystore.com/skittles-original-theater-box-12ct/"
+							target="_blank"
+							>Skittles Original</a
+						>, and so forth. Since a lot of popular candies are
+						labeled as "Neither", more detailed analysis is needed
+						to better see what types of candies are popular among
+						American people.
+					</p>
+					<p>
+						Now, I'm craving candy...
+						<br />Happy Halloween!
+					</p>
+				</div>
+			</section>
+		</div>
 
-<span class="comment"># Get a table of attributes and differences in win rate average</span>
-avg.win <- data.frame(
-    ATTRIBUTE = c("Chocolate", "Fruity", "Caramel", "Peanut", "Nougat", "Crispy", "Hard candy", "Candy bar",   "Bag"),
-    NO = no,
-    YES = yes
-) %>%
-    mutate(difference = YES - NO) %>% 
-    arrange(desc(difference))</pre>
-                        <img src="./image/table2.png" width = 680 alt="table of average winpercent per attribute">
-                        <p>
-                            The screenshot of the table above shows the biggest difference occurs between the average win rate for chocolate candies and non-chocolate candies.
-                        </p>
-                        <p>
-                            On the other hand, fruity flavored candies and hard candies are among the least popular on average. If you are thinking to invent a new candy, it would be risky to make it hard or fruity flavored. I'm going to visualize this analysis <a href="#avg-win-rate">later</a> in the project.
-                        </p>
-                    </div>
-                </div>
-                <div id="visualization">
-                    <h2>
-                        Visualizing the data
-                    </h2>
-                    <p>
-                        In this section, I'm going to create four kinds of visualizations using parts of the above analysis.
-                    </p>
-                    <p>
-                        With the visualizations, I'm going to answer the following questions:
-                        <ul>
-                            <li>
-                                What is each candy's win rate?
-                            </li>
-                            <li>
-                                <!-- Need to adjust this, or add a link or w.e-->
-                                When looking at the averarge win rate comparison analysis, are there any other findings?
-                            </li>
-                            <li>
-                                Is there any relationship between a candy's sugar content, or unit price, and its popularity?
-                            </li>
-                            <li>
-                                How many candies are hard candies and how many are candy bars? Which type is more popular overall?
-                            </li>
-                        </ul>
-                    </p>
-                    <div id="rank-viz">
-                        <h3>
-                            The win rate ranking
-                        </h3>
-                        <p>
-                            First, I'm going to visualize the candies' win rates. Since the analysis above shows chocolate candies are the most popular on average, I'm going to visualize how many candies have the "chocolate" attribute, and where they are located in the ranking.
-                        </p>
-                        <p>
-                            To do that, I'm going to create an ordered bar chart.
-                        </p>
-                        <pre>
-candy.data %>% 
-    mutate(chocolate = str_replace(chocolate, "0", "No"),
-           chocolate = str_replace(chocolate, "1", "Yes")) %>% 
-    ggplot(mapping = aes(
-        x = reorder(competitorname, desc(winpercent)), 
-        y = winpercent)) +
-    geom_col(aes(fill = factor(chocolate)), width = 0.5) +
-    scale_fill_manual(values = c("lightgray", "#FC4C02")) +
-    scale_y_continuous(breaks = c(0, 25, 50, 75),
-                       label = c("0%", "25%", "50%", "75%")) +
-    labs(title = "Candy's popularity and chocolate",
-         y = "Win rate", fill = "Chocolate?") +
-    annotate("text", x = 14, y = 86, label = "Reese's Peanut Butter cup (84.2%)", size = 2.5) +
-    annotate("text", x = 20, y = 70, label = "Starburst (67.0%)", size = 2.5) +
-    annotate("text", x = 78, y = 37, label = "Nik L Nip (22.4%)", size = 2.5) +
-    theme_minimal() +
-    theme(
-        axis.text.x = element_blank(),
-        axis.title.x = element_blank(),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor = element_blank(),
-        legend.position = c(0.95, 0.83),
-        legend.justification = c("right", "top")
-    ) </pre>
-                    <img src="./image/rank_chocolate.png" width=680 alt="Bar chart of win percentage and chocolate">
-                    <p>
-                        Each bar represents each candy's win rate. The visualization above shows higher-ranked candies tend to contain chocolate.
-                    </p>
-                    <p>
-                        The visualization below, created similarly, shows the win rate ranking and whether each candy contains fruity flavors.
-                    </p>
-                    <img src="./image/rank_fruity.png" width=680 alt="Bar chart of win percentage and fruity flavors">
-                    <p>
-                        This shows that candies that contain fruity flavors are fairly equally distributed, except for the ones in the highest-ranked group.
-                    </p>
-                    </div>
-                    <div id="avg-win-rate">
-                        <h3>
-                            Average win rate comparison for candies with or without a specific attribute
-                        </h3>
-                        <p>
-                            In the <a href="#type">analysis</a> above, we learned that whether a candy has chocolate or not affects its average win rate the most, compared to other candy attributes such as fruity flavors and crispiness.
-                        </p>
-                        <p>
-                            Now, I'm going to create a Cleveland dot plot to visualize how average win rate varies among different candy attributes. Ultimately, I'm trying to see what kind of candy attributes are more/less popular. Here, I'm using <a href="https://www.r-graph-gallery.com/303-lollipop-plot-with-2-values.html" target="_blank">the R Graph Gallery</a> and <a href="https://uc-r.github.io/cleveland-dot-plots" target="_blank">UC Business Analytics R Programming Guide</a> as a reference.
-                        </p>
-                        <pre>
-<span class="comment"># Reuse the table from the analysis above</span>
-avg.win %>%  
-    ggplot(aes(x = reorder(ATTRIBUTE, difference))) +
-    geom_segment(aes(xend = ATTRIBUTE, y = NO, yend = YES), color = "lightgray", size = 1.2) +
-    geom_point(aes(y = NO, color = "No"), size = 2.7) +
-    geom_point(aes(y = YES, color = "Yes"), size = 2.7) +
-    scale_color_manual(name = "Condition", labels = c("Do not include", "Include"), values = c("#FC4C02", "#00B098")) +
-    scale_y_continuous(breaks = c(40, 50, 60), 
-                        label = c("40%", "50%", "60%")) +
-    theme_minimal() +
-    labs(title = "Average win rate for candies with or without each attribute",
-            x = "Attribute", y = "Average win rate") +
-    theme(
-        panel.grid.minor.x = element_blank(),
-        legend.position = c(0.95, 0.35),
-        legend.justification = c("right", "top"),
-        legend.background = element_rect(color = "white", fill = "white")
-    ) +
-    coord_flip()</pre>
-                    <img src="./image/avg_win_rate.png" width=680 alt="Cleveland dot plot for average win rate difference per each attribute">
-                    <p>
-                        The visualization above reassures that the greatest average win rate difference is determined by whether or not a candy includes chocolate. It also shows that crispy candies have an even higher average win rate than chocolate ones.
-                    </p>
-                    <p>
-                        If we look at row "Chocolate", we can say chocolate is almost essential to a candy's popularity. On the other hand, if we look at row "Crispy", we can say that the absence of crispiness doesn't affect its popularity as harshly as the absence of chocolate. Rather, crispiness makes a popular candy more popular on average.
-                    </p>
-                    </div>
-                    <div id="sugar-price-win">
-                        <h3>
-                            Relationships between sugar, price, and win percentiles
-                        </h3>
-                        <p>
-                            Here, I'm making a scatter plot to see if there's a correlation between a candy's sugar content, or unit price, and its popularity.
-                        </p>
-                        <pre>
-candy.data %>% 
-    mutate(pricepercent = pricepercent * 100) %>% 
-    ggplot(mapping = aes(x = winpercent, y = sugarpercent)) +
-    geom_point(aes(color = pricepercent), size = 5, shape = 18, alpha = 0.8) +
-    scale_color_gradient(low = "lightgray", high = "#FC4C02") +
-    scale_x_continuous(breaks = c(25, 50, 75),
-                        label = c("25%", "50%", "75%")) +
-    scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1),
-                        label = c("0%", "25%", "50%", "75%", "100%")) +
-    labs(title = "Relationships between a candy's popularity, sugar, and price",
-         x = "Win rate", y = "Sugar rate", color = "Price rate (%)") +
-    theme_minimal() +
-    theme(panel.grid.minor = element_blank())</pre>
-                    <img src="./image/sugar_price_win.png" width=680 alt="Scatter plot of sugar, price, win percentages">
-                    </div>
-                    <p>
-                        From this visualization, it doesn't look like there's a notable correlation between sugar and popularity, or price and popularity.  
-                    </p>
-                    <div id="bar-or-hard">
-                        <h3>
-                            Candy bar or hard candy?
-                        </h3>
-                        <p>
-                            Finally, all the candies can be grouped as either 1) hard candy, 2) candy bar, or 3) neither.
-                        </p>
-                        <p>
-                            In this section, I'm going to create an alluvial diagram and visualize the relationship between a candy's type and win percentage. Here, I will use <a href="https://www.r-graph-gallery.com/sankey-diagram.html" target="_blank">the R Graph Gallery</a> and <a href="https://cran.r-project.org/web/packages/ggalluvial/vignettes/ggalluvial.html" target="_blank">CRAN - R Project</a> as a reference.
-                        </p>
-                        <p>
-                            First, I'm going to manipulate the data into an alluvial form. To do this, I divide the win rate into four groups (quantiles).
-                        </p>
-                        <p>
-                            From the top 25% in popularity, I'll label the data as "Rank 1", followed by "Rank 2" (25% ~ 50%), "Rank 3" (50% ~ 75%), and "Rank 4" (bottom 25%).
-                        </p>
-                        <pre>
-<span class="comment"># Create a column that shows candy's type (bar, hard, or neither)</span>
-reduced <- candy.data %>% 
-    select(hard, bar, winpercent) %>% 
-    mutate(type = hard - bar) %>%  
-    mutate(type = str_replace(type, "-1", "bar"),
-           type = str_replace(type, "0", "neither"),
-           type = str_replace(type, "1", "hard")) %>% 
-    select(winpercent, type)
-
-<span class="comment"># Divide the winpercent in each quantile</span>
-low <- quantile(reduced$winpercent, 0.25)
-median <- quantile(reduced$winpercent, 0.5)
-high <- quantile(reduced$winpercent, 0.75)
-
-<span class="comment"># Obtain the data with rank names</span>
-rank1 <- reduced %>% 
-    filter(winpercent >= high) %>% 
-    mutate(rank = "Rank 1")
-rank2 <- reduced %>% 
-    filter(winpercent < high, winpercent >= median) %>% 
-    mutate(rank = "Rank 2")
-rank3 <- reduced %>% 
-    filter(winpercent < median, winpercent >= low) %>% 
-    mutate(rank = "Rank 3")
-rank4 <- reduced %>% 
-    filter(winpercent < low) %>% 
-    mutate(rank = "Rank 4")
-
-<span class="comment"># Combine data</span>
-reduced2 <- rbind(rank1, rank2, rank3, rank4) %>% 
-    select(-winpercent)</pre>
-                        <p>
-                            Let's visualize!
-                        </p>
-                        <pre>
-<span class="comment"># Install & load the library</span>
-install.packages("ggalluvial")
-library(ggalluvial)
-
-<span class="comment"># Visualize the data</span>
-reduced2 %>% 
-    ggplot(mapping = aes(axis1 = type,
-                        axis2 = rank)) +
-    geom_alluvium(aes(fill = rank)) +
-    geom_stratum(width = 0.2, fill = "white", color = "gray") +
-    geom_text(stat = "stratum", 
-            aes(label = after_stat(stratum)),
-            color = "#545454") +
-    scale_x_discrete(limits = c("Candy type", "Popularity"),
-                    expand = c(0.05, 0.05)) +
-    scale_fill_manual(values = c("#FC4C02", "#00B098", "#B0AE00", "#7F0FFC")) +
-    labs(title = "Candy's popularity rank and its type") +
-    theme_minimal() +
-    theme(legend.position = "none",
-        axis.text.y = element_blank(),
-        panel.grid.major.y = element_blank(),
-        panel.grid.minor.y = element_blank()) </pre>
-                    <img src="./image/win_type.png" width=680 alt="Alluvial diagram of candy types and win rate">
-                    <p>
-                        This visualization shows that candy bars tend to be more preferred; about half of candy bars are ranked on the top 25%. Conversely, hard candies are less popular; most of them are ranked below 50%.
-                    </p>
-                    <p>
-                        However, as shown in the visualization, more than half the candies are labeled "Neither" as the candy type. Those candies include: <a href="https://www.hersheys.com/reeses/en_us/products/reeses-peanut-butter-cups.html" target="_blank">Reese's Peanut Butter cup</a>, <a href="https://www.candystore.com/candy-corn-30lb/" target="_blank">Candy Corn</a>, <a href="https://www.mms.com/en-us/mms-peanut-butter-chocolate-sharing-size/p/mms-peanut-butter-chocolate" target="_blank">Peanut butter M&M's</a>, <a href="https://www.candystore.com/skittles-original-theater-box-12ct/" target="_blank">Skittles Original</a>, and so forth. Since a lot of popular candies are labeled as "Neither", more detailed analysis is needed to better see what types of candies are popular among American people.
-                    </p>
-                    <p>
-                        Now, I'm craving candy...
-                        <br>Happy Halloween!
-                    </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="footer">
-            <a href="#header">Back to Top　<i class="fas fa-ghost"></i></a>
-        </div>
-    </body>
-
+		<div id="footer">
+			<a href="#header">Back to Top　<i class="fas fa-ghost"></i></a>
+		</div>
+		<script src="https://d3js.org/d3.v6.min.js"></script>
+		<script src="https://unpkg.com/enter-view"></script>
+		<script src="script.js"></script>
+	</body>
 </html>
